@@ -75,7 +75,7 @@ if __name__ == '__main__':
     # Combine models, datasets, and targets into a list of tuples
     print("INITIAL models ")
     i=0
-    while(i<2):
+    while(i<1):
         
         model1.load_state_dict(start_model_general.state_dict())
         model2.load_state_dict(start_model_general.state_dict())
@@ -125,10 +125,28 @@ if __name__ == '__main__':
                     #print(f"Name: {name}, Shape: {param.shape}")
                 print("=" * 20)
 
-        print("ONE MODEL FINAL")
-        print(all_models[0][1])
-        start_model_general=all_models[0][1]
-        for name, param in start_model_general.named_parameters():
-            print(f"Name: {name}, Shape: {param}")
-            #print(f"Name: {name}, Shape: {param.shape}")
-        i=i+1
+        average_models=[]
+        for idx, both_models in enumerate(all_models):
+            print(f"node {idx}")
+            for idy, model in enumerate(both_models):
+                if idy==1:
+                    average_models.append(model)
+                    
+               
+        print("Append model weights")
+        print(average_models)
+
+        for idx, model in enumerate(average_models):
+            for (name, param) in (model.named_parameters()):                                        
+                        print(f"Name: {name}, Shape: {param}")
+                        #print(f"Name: {name}, Shape: {param.shape}")
+               
+    
+
+        # print("ONE MODEL FINAL")
+        # print(all_models[0][1])
+        # start_model_general=all_models[0][1]
+        # for name, param in start_model_general.named_parameters():
+        #     print(f"Name: {name}, Shape: {param}")
+        #     #print(f"Name: {name}, Shape: {param.shape}")
+        # i=i+1
