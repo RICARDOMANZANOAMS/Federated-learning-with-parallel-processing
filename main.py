@@ -60,12 +60,7 @@ def train_worker(args):
         optimizer.step()
 
        #print local models
-    print("AFTER TRAINING")
-    for name, param in model.named_parameters():
-       print(f"Name: {name}, Shape: {param}")
-    
-
-   
+       
     both_models.append(start_model_save_input)
     both_models.append(model)
 
@@ -75,7 +70,7 @@ if __name__ == '__main__':
     # Combine models, datasets, and targets into a list of tuples
     print("INITIAL models ")
     i=0
-    while(i<1):
+    while(i<3):
         
         model1.load_state_dict(start_model_general.state_dict())
         model2.load_state_dict(start_model_general.state_dict())
@@ -89,10 +84,10 @@ if __name__ == '__main__':
         # models_general=[start_model_general]*num_models
         # models=models_general
         #print local models
-        for idx, model in enumerate(models):
-            print(f"Model {idx + 1} parameters:")
-            for name, param in model.named_parameters():
-                print(f"Name: {name}, Shape: {param}")
+        # for idx, model in enumerate(models):
+        #     print(f"Model {idx + 1} parameters:")
+        #     for name, param in model.named_parameters():
+        #         print(f"Name: {name}, Shape: {param}")
         
     
 
@@ -130,18 +125,52 @@ if __name__ == '__main__':
             print(f"node {idx}")
             for idy, model in enumerate(both_models):
                 if idy==1:
-                    average_models.append(model)
+                    average_models.append(model.parameters())
                     
                
         print("Append model weights")
         print(average_models)
 
-        for idx, model in enumerate(average_models):
-            for (name, param) in (model.named_parameters()):                                        
-                        print(f"Name: {name}, Shape: {param}")
+        
+                      
+                        
                         #print(f"Name: {name}, Shape: {param.shape}")
                
-    
+      
+     
+
+
+        # model_fold1_param=average_models[0].parameters()
+        # model_fold2_param=average_models[1].parameters()
+        # model_fold3_param=average_models[2].parameters()
+
+
+        
+        for param in start_model_general.parameters():
+            count_number_nodes=0
+            for element in average_models:
+                
+                if count_number_nodes==0:
+                    a=next(element)
+                else:
+                    a=a+next(element)
+                count_number_nodes=count_number_nodes+1
+            # print(a)
+            average_param=a/count_number_nodes
+            # print("average")
+            # print(average_param)
+            param.data=average_param
+        print(start_model_general)
+        i=i+1
+        for (name, param) in (start_model_general.named_parameters()):      
+                                                          
+            print(f"Name: {name}, Shape: {param}")
+        print("--------------------new-------------------------")
+        # i=i+1
+        # print("model concat")
+        # for (name, param) in (start_model_general.named_parameters()):                                        
+        #     print(f"Name: {name}, Shape: {param}")
+            #print(f"Name: {name}, Shape: {param.shape}")
 
         # print("ONE MODEL FINAL")
         # print(all_models[0][1])
